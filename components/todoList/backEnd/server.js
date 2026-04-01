@@ -11,7 +11,13 @@ db.run(
         CategoryId INTEGER,
         Unit TEXT,
         Price float
-     )`,err =>err? console.log("Table Created Successfully"):console.log(err)
+     )`,(err) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Table Created Successfully");
+        }
+    }
 )
 const search = (callback)=>{
     db.all('SELECT * FROM Products',(err,rows)=>{
@@ -33,7 +39,7 @@ const insertData = db.prepare(
     }
 )
 const deleteData = db.prepare(`
-DELETE FROM Products WHERE ProductId= ?`,(err)=>{
+DELETE FROM Products WHERE ProductId== ?`,(err)=>{
     if (err){
         console.log(err)
     }else{
@@ -57,14 +63,14 @@ UPDATE Products SET ProductName= ?,
     })
 const server = http.createServer((req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     search((result)=>{
         res.write(JSON.stringify(result));
         res.end();
     })
 
-    if (req.method == "POST"){
+    if (req.method === "POST"){
         let body = '';
         req.on('data', (chunk)=>{
             body += chunk;
@@ -81,7 +87,7 @@ const server = http.createServer((req, res) => {
             );
             console.log("Successfully Updated Successfully");
         })
-    }else if(req.method == "DELETE"){
+    }else if(req.method === "DELETE"){
         let body = '';
         req.on('data', (chunk)=>{
             body += chunk;
@@ -92,7 +98,7 @@ const server = http.createServer((req, res) => {
             deleteData.run(parsedBody.ProductId)
             console.log("Successfully Deleted Successfully");
         })
-    }else if(req.method == "PUT"){
+    }else if(req.method === "PUT"){
         let body = '';
         req.on('data', (chunk)=>{
             body += chunk;

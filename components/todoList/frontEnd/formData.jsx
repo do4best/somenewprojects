@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {redirect, useNavigate} from "react-router-dom";
+import {data, redirect, useNavigate} from "react-router-dom";
 import Box from "@mui/material/Box";
 import {
     Button,
@@ -32,11 +32,10 @@ function FormData() {
         event.preventDefault();
         console.log("Submitted data:", dataToInsert);
 
-        // Example redirect if needed
-        // navigate("/next-page");
+
     };
     useEffect(() => {
-        fetch("http://localhost:3000/products")
+        fetch("http://localhost:3000/")
         .then(res=>res.json())
         .then(data=>{
             setResult(data)
@@ -55,6 +54,33 @@ function FormData() {
             }
         }).catch(err=>console.log(err))
     },[])
+    const handelSubmit = (event) => {
+        const foundItem = data.find(
+            (item)=>window.location.pathname === `/modify/${item.ProductId}`)
+            if (foundItem) {
+                fetch("http://localhost:3000/",{
+                    method:"PUT",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify(dataToInsert)
+                })
+                navigate("/")
+            }else{
+                fetch("http://localhost:3000/",{
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify(dataToInsert)
+                })
+            }
+
+    }
+
+    const handelChange = (event) => {
+        const {name,value} = event.target;
+        setDataToInsert({
+            ...dataToInsert,
+            [name]:value
+        })
+    }
 
     return (
         <Box

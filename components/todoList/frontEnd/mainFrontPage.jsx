@@ -6,7 +6,7 @@ import Header from "./header.jsx";
 import ListOfResult from "./listOfResult.jsx";
 import Footer from "./footer.jsx";
 
-function MainFrontPage(props) {
+function MainFrontPage() {
     return (
         <>
 

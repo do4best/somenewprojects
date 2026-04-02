@@ -19,6 +19,26 @@ function FormData() {
         Unit: "",
         Price: "",
     });
+    useEffect(() => {
+        fetch("http://localhost:3000/")
+            .then(res=>res.json())
+            .then(data=>{
+                setResult(data)
+                console.log(data)
+                const foundData = data.find(item => window.location.pathname === `/modify/${item.ProductID}`);
+                if (foundData) {
+                    setDataToInsert((preState) => ({
+                        ...preState,
+                        ...foundData,
+                    }))
+                }else{
+                    if (!redirect) {
+                        setRedirectTo(true);
+                        navigate("/");
+                    }
+                }
+            }).catch(err=>console.log(err))
+    },[])
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -30,30 +50,25 @@ function FormData() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("Submitted data:", dataToInsert);
+      const foundItem = data.find((item)=>window.location.pathname ===`/modify/${item.ProductId}`);
+      if (foundItem){
+          fetch("http://localhost:3000/",{
+              method:"PUT",
+              body:JSON.stringify(dataToInsert),
+              headers:{"Content-Type":"application/json"}
+          });
+          navigate("/")
+      }else{
+          fetch("http://localhost:3000/",{
+              method:"POST",
+              body:JSON.stringify(dataToInsert),
+              headers:{"Content-Type":"application/json"}
+          })
+      }
 
 
     };
-    useEffect(() => {
-        fetch("http://localhost:3000/")
-        .then(res=>res.json())
-        .then(data=>{
-            setResult(data)
-            console.log(data)
-            const foundData = data.find(item => window.location.pathname === `/modify/${item.ProductID}`);
-            if (foundData) {
-                setDataToInsert((preState) => ({
-                    ...preState,
-                    ...foundData,
-                }))
-            }else{
-                if (!redirect) {
-                    setRedirectTo(true);
-                    navigate("/");
-                }
-            }
-        }).catch(err=>console.log(err))
-    },[])
+
     const handelSubmit = (event) => {
         const foundItem = data.find(
             (item)=>window.location.pathname === `/modify/${item.ProductId}`)

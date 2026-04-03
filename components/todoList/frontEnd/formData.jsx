@@ -25,7 +25,7 @@ function FormData() {
             .then(data=>{
                 setResult(data)
                 console.log(data)
-                const foundData = data.find(item => window.location.pathname === `/modify/${item.ProductID}`);
+                const foundData = data.find(item => window.location.pathname === `/modify/${item.ProductId}`);
                 if (foundData) {
                     setDataToInsert((preState) => ({
                         ...preState,
@@ -41,16 +41,16 @@ function FormData() {
     },[])
 
     const handleChange = (event) => {
-        const { name, value } = event.target;
+
         setDataToInsert((prev) => ({
             ...prev,
-            [name]: value,
+            [event.target.name]: event.target.value,
         }));
     };
 
     const handleSubmit = (event) => {
-        event.preventDefault();
-      const foundItem = data.find((item)=>window.location.pathname ===`/modify/${item.ProductId}`);
+
+      const foundItem = result.find((item)=>window.location.pathname ===`/modify/${item.ProductId}`);
       if (foundItem){
           fetch("http://localhost:3000/",{
               method:"PUT",
@@ -69,33 +69,7 @@ function FormData() {
 
     };
 
-    const handelSubmit = (event) => {
-        const foundItem = data.find(
-            (item)=>window.location.pathname === `/modify/${item.ProductId}`)
-            if (foundItem) {
-                fetch("http://localhost:3000/",{
-                    method:"PUT",
-                    headers:{"Content-Type":"application/json"},
-                    body:JSON.stringify(dataToInsert)
-                })
-                navigate("/")
-            }else{
-                fetch("http://localhost:3000/",{
-                    method:"POST",
-                    headers:{"Content-Type":"application/json"},
-                    body:JSON.stringify(dataToInsert)
-                })
-            }
 
-    }
-
-    const handelChange = (event) => {
-        const {name,value} = event.target;
-        setDataToInsert({
-            ...dataToInsert,
-            [name]:value
-        })
-    }
 
     return (
         <Box
@@ -115,7 +89,7 @@ function FormData() {
                 <TextField
                     label="Product Name"
                     name="ProductName"
-                    value={formData.ProductName}
+                    value={dataToInsert.ProductName}
                     onChange={handleChange}
                     fullWidth
                 />
@@ -123,7 +97,7 @@ function FormData() {
                 <TextField
                     label="Supplier ID"
                     name="SupplierId"
-                    value={formData.SupplierId}
+                    value={dataToInsert.SupplierId}
                     onChange={handleChange}
                     fullWidth
                 />
@@ -131,7 +105,7 @@ function FormData() {
                 <TextField
                     label="Category ID"
                     name="CategoryId"
-                    value={formData.CategoryId}
+                    value={dataToInsert.CategoryId}
                     onChange={handleChange}
                     fullWidth
                 />
@@ -139,7 +113,7 @@ function FormData() {
                 <TextField
                     label="Unit"
                     name="Unit"
-                    value={formData.Unit}
+                    value={dataToInsert.Unit}
                     onChange={handleChange}
                     fullWidth
                 />
@@ -148,7 +122,7 @@ function FormData() {
                     label="Price"
                     name="Price"
                     type="number"
-                    value={formData.Price}
+                    value={dataToInsert.Price}
                     onChange={handleChange}
                     fullWidth
                 />

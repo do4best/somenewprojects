@@ -6,7 +6,7 @@ const db = new sqlite3.Database("company.db",(err)=>{
 db.run(
     `CREATE TABLE IF NOT EXISTS Products(
     ProductId INTEGER PRIMARY KEY AUTOINCREMENT,
-        ProductName TEXT NOT NULL,
+        ProductName TEXT,
         SupplierId INTEGER,
         CategoryId INTEGER,
         Unit TEXT,
@@ -39,7 +39,7 @@ const insertData = db.prepare(
     }
 )
 const deleteData = db.prepare(`
-DELETE FROM Products WHERE ProductId== ?`,(err)=>{
+DELETE FROM Products WHERE ProductId == ?`,(err)=>{
     if (err){
         console.log(err)
     }else{
@@ -71,7 +71,7 @@ const server = http.createServer((req, res) => {
     })
 
     if (req.method === "POST"){
-        let body = '';
+        let body = "";
         req.on('data', (chunk)=>{
             body += chunk;
         })

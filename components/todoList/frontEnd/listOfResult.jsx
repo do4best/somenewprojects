@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {
     Box,
-    Button,
+    Button, Link,
     Paper,
     Table,
     TableBody,
@@ -12,7 +12,7 @@ import {
     Typography
 } from "@mui/material";
 
-function ListOfResult(props) {
+function ListOfResult() {
     const [result, setResult] = React.useState([]);
 
     useEffect(() => {
@@ -26,11 +26,12 @@ function ListOfResult(props) {
     }, []);
 
     const handelDelete = (event) => {
+        console.log(event.target.name);
 
         if (confirm("Are you sure you want to delete this item?")) {
             console.log("Information Detail");
             fetch("http://localhost:3000/", {
-                method: "PUT",
+                method: "DELETE",
                 body: JSON.stringify({
                     ["ProductId"]: event.target.name,
                 }),
@@ -52,26 +53,28 @@ function ListOfResult(props) {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell><strong>Product ID</strong></TableCell>
                             <TableCell><strong>Product Name</strong></TableCell>
-                            <TableCell><strong>Price</strong></TableCell>
-                            <TableCell><strong>Action</strong></TableCell>
+                            <TableCell><strong>Product ID</strong></TableCell>
+                            <TableCell><strong>Product Code</strong></TableCell>
+                            <TableCell><strong>Product Type</strong></TableCell>
+                            <TableCell><strong>Product Price</strong></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {result.map((item, index) => (
                             <TableRow key={item.ProductId || index}>
-                                <TableCell>{item.ProductId}</TableCell>
                                 <TableCell>{item.ProductName}</TableCell>
+                                <TableCell>{item.SupplierId}</TableCell>
+                                <TableCell>{item.CategoryId}</TableCell>
+                                <TableCell>{item.Unit}</TableCell>
                                 <TableCell>{item.Price}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        variant="contained"
-                                        color="error"
-                                        id={item.ProductId}
-                                        name={item.ProductId}
-                                        onClick={handelDelete}
-                                    >
+                                <TableCell sx={{display: 'flex', gap: 2}}>
+                                    <Link to={`/modify/${item.ProductId}`}>
+                                        <Button variant="contained">                                    
+                                            Modify
+                                        </Button>
+                                    </Link>
+                                    <Button variant="contained" color="error" name={item.ProductId} onClick={handelDelete} >
                                         Delete
                                     </Button>
                                 </TableCell>

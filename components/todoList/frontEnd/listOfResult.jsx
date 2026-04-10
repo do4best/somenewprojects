@@ -14,7 +14,7 @@ import {
 
 function ListOfResult() {
     const [result, setResult] = React.useState([]);
-
+// side effect as outsider
     useEffect(() => {
         fetch("http://localhost:3000/")
             .then(res => res.json())
@@ -24,13 +24,13 @@ function ListOfResult() {
             })
             .catch(err => console.log(err));
     }, []);
-
-    const handelDelete = (event) => {
+// delete
+    const handelDelete = async (event) => {
         console.log(event.target.name);
 
         if (confirm("Are you sure you want to delete this item?")) {
             console.log("Information Detail");
-            fetch("http://localhost:3000/", {
+            await fetch("http://localhost:3000/", {
                 method: "DELETE",
                 body: JSON.stringify({
                     ["ProductId"]: event.target.name,
@@ -70,7 +70,7 @@ function ListOfResult() {
                                 <TableCell>{item.Price}</TableCell>
                                 <TableCell sx={{display: 'flex', gap: 2}}>
                                     <Link to={`/modify/${item.ProductId}`}>
-                                        <Button variant="contained">                                    
+                                        <Button variant="contained">
                                             Modify
                                         </Button>
                                     </Link>
